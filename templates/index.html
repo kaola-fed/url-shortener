@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>URL🐨Shortener</title>
+  <link href="//mm.bst.126.net/favicon.ico" rel="shortcut icon">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.min.js"></script>
+  <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.6.0/dist/clipboard.min.js"></script>
+  <link href="//fonts.googleapis.com/css?family=Baloo" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Baloo', "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      min-width: 600px;
+      min-height: 500px;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #00BCD4;
+    }
+
+    #app {
+      width: 600px;
+      height: 520px;
+    }
+
+    #app h1 {
+      font-family: 'Baloo', cursive;
+      text-align: center;
+      height: 80px;
+      line-height: 80px;
+      font-size: 50px;
+      margin: 10px 0;
+    }
+
+    .container {
+      width: 100%;
+      height: 200px;
+      margin-bottom: 200px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .m-input {
+      height: 40px;
+      margin-bottom: 10px;
+    }
+
+    .m-input .loading {
+      vertical-align: middle;
+      width: 40px;
+      height: 40px;
+    }
+
+    .input-box {
+      border-radius: 3px;
+      background-color: #f2f2f2;
+      width: 350px;
+      height: 40px;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .input-box input {
+      box-sizing: border-box;
+      width: 350px;
+      float: right;
+      background-color: transparent;
+      border: 0px;
+      padding: 10px;
+      font-size: 14px;
+      position: relative;
+      outline: 0px;
+    }
+
+    .btn {
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-size: 18px;
+      text-decoration: none;
+      color: #fff;
+      position: relative;
+      display: inline-block;
+      background-color: #00BCD4;
+      box-shadow: 0px 5px 0px 0px #0095a8;
+      cursor: pointer;
+    }
+
+    .btn:active {
+      transform: translate(0px, 5px);
+      -webkit-transform: translate(0px, 5px);
+      box-shadow: 0px 1px 0px 0px;
+    }
+
+    .m-preview {
+      position: relative;
+    }
+
+    .m-preview .url-box {
+      height: 150px;
+      margin-left: 60px;
+      position: absolute;
+      top: 0;
+    }
+
+    .m-preview img,
+    .url-box {
+      display: inline-block;
+      width: 150px;
+    }
+
+    .url-box .url,
+    .copy {
+      display: block;
+    }
+
+    .url-box .url {
+      color: #03A9F4;
+      margin-top: 30px;
+    }
+
+    .url-box .copy {
+      text-align: center;
+      height: 40px;
+      line-height: 40px;
+      background-color: #bfe1f8;
+      border-radius: 3px;
+      color: rgba(0, 0, 0, 0.75);
+      cursor: pointer;
+      margin-top: 10px;
+      user-select: none;
+    }
+
+    .url-box .copy:active {
+      background-color: #91cdf6;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>URL🐨Shortener</h1>
+    <div class="container">
+      <div class="m-input">
+        <div class="input-box">
+          <input v-model="inputUrl" placeholder="✒️Please input URL">
+        </div>
+        <a v-if="!loading" class="btn" v-on:click="doShorten">🚀Shorten!</a>
+        <img v-if="loading" class="loading" src="//loading.io/assets/img/hourglass.svg">
+      </div>
+      <div class="m-preview" v-if="shortUrl">
+        <img :src="qrcode" width="150" height="150">
+        <div class="url-box">
+          <a class="url" :href="shortUrl">{{ shortUrl }}</a>
+          <span class="copy" v-clipboard="shortUrl" @success="onCopySuccess">📋Copy<i v-if="copyOk">✔️</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Ref: https://goo.gl/LfW5r2
+    Vue.directive('clipboard', {
+      bind(container, binding, vnode) {
+        const {
+          value
+        } = binding;
+        const option = {};
+
+        if (value && typeof value === 'string') {
+          option.text = () => value;
+        }
+
+        clipboards = new Clipboard(container, option);
+
+        const {
+          componentOptions,
+          data
+        } = vnode;
+        const listeners = componentOptions ? componentOptions.listeners : null;
+        const on = data ? data.on : null;
+        const events = listeners && listeners || on && on;
+
+        if (events && typeof events === 'object' && Object.keys(events).length) {
+          // fixed with Vue 2.2.x, event object `fn` rename to `fns`
+          Object.keys(events).map(cb => clipboards.on(cb, events[cb].fn || events[cb].fns));
+        }
+      },
+      unbind() {
+        if (clipboards && clipboards.destroy) {
+          clipboards.destroy();
+        }
+      },
+      update(container, binding, vnode) {
+        binding.def.unbind();
+        binding.def.bind(container, binding, vnode);
+      }
+    });
+
+    new Vue({
+      el: '#app',
+      data: {
+        loading: false,
+        copyOk: false,
+        inputUrl: '',
+        shortUrl: '',
+      },
+      methods: {
+        doShorten: function () {
+          this.loading = true;
+          this.shortUrl = '';
+          // TODO: fetch /shorten
+          setTimeout(function () {
+            this.loading = false;
+            this.shortUrl = this.inputUrl;
+          }.bind(this), 1000);
+        },
+        onCopySuccess: function () {
+          this.copyOk = true;
+          setTimeout(function () {
+            this.copyOk = false;
+          }.bind(this), 1000);
+        }
+      },
+      computed: {
+        qrcode: function () {
+          const base = '//chart.apis.google.com/chart?cht=qr&chs=150x150&chld=L|1&chl=';
+          return base + this.shortUrl;
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

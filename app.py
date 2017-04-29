@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 import sys, urllib, requests
-from flask import Flask, request
+from flask import Flask, request, render_template
 app = Flask(__name__)
 
 if len(sys.argv) < 2:
@@ -13,7 +13,7 @@ BASE_URL = 'https://163.lu/'
 
 @app.route('/')
 def index():
-    return 'URL Shortener'
+    return render_template('index.html')
 
 @app.route('/shorten', methods = ['POST'])
 def shorten():
