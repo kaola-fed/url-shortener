@@ -164,7 +164,7 @@
       <div class="m-preview" v-show="shortUrl">
         <img :src="qrcode" width="150" height="150">
         <div class="url-box">
-          <a class="url" :href="shortUrl">{{shortUrl}}</a>
+          <a class="url" :href="shortUrl" target="_blank">{{shortUrl}}</a>
           <span class="copy" v-clipboard="shortUrl" @success="onCopySuccess">📋Copy<i v-show="copyOk">✔️</i></span>
         </div>
       </div>
@@ -219,24 +219,33 @@
         shortUrl: '',
       },
       methods: {
-        doShorten: function () {
+        doShorten() {
           this.loading = true;
           this.shortUrl = '';
-          // TODO: fetch /shorten
-          setTimeout(function () {
+          fetch('/shorten', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'url=' + this.inputUrl,
+          }).then(response => {
+            return response.text();
+          }).then(text => {
             this.loading = false;
-            this.shortUrl = this.inputUrl;
-          }.bind(this), 1000);
+            this.shortUrl = text;
+          }).catch(e => {
+            this.loading = false;
+          });
         },
-        onCopySuccess: function () {
+        onCopySuccess() {
           this.copyOk = true;
-          setTimeout(function () {
+          setTimeout( () => {
             this.copyOk = false;
-          }.bind(this), 1000);
+          }, 1000);
         }
       },
       computed: {
-        qrcode: function () {
+        qrcode() {
           const base = '//chart.apis.google.com/chart?cht=qr&chs=150x150&chld=L|1&chl=';
           return base + this.shortUrl;
         }
