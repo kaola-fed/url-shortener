@@ -98,11 +98,20 @@
       box-shadow: 0px 5px 0px 0px #0095a8;
       cursor: pointer;
     }
+    .btn.disabled {
+      background-color: #ccc;
+      box-shadow: 0px 5px 0px 0px #aaa;
+      cursor: not-allowed;
+    }
 
     .btn:active {
       transform: translate(0px, 5px);
-      -webkit-transform: translate(0px, 5px);
       box-shadow: 0px 1px 0px 0px;
+    }
+
+    .btn:active.disabled {
+      transform: initial;
+      box-shadow: 0px 5px 0px 0px #aaa;
     }
 
     .m-preview {
@@ -158,7 +167,7 @@
         <div class="input-box">
           <input v-model="inputUrl" placeholder="✒️Please input URL">
         </div>
-        <a v-show="!loading" class="btn" v-on:click="doShorten">🚀Shorten!</a>
+        <a :class="{disabled: loading || !isURL}" class="btn" v-on:click="doShorten">🚀Shorten!</a>
         <img v-show="loading" class="loading" src="//loading.io/assets/img/hourglass.svg">
       </div>
       <div class="m-preview" v-show="shortUrl">
@@ -220,6 +229,8 @@
       },
       methods: {
         doShorten() {
+          if (this.loading || !this.isURL) return;
+
           this.loading = true;
           this.shortUrl = '';
           fetch('/shorten', {
@@ -237,18 +248,25 @@
             this.loading = false;
           });
         },
+
         onCopySuccess() {
           this.copyOk = true;
           setTimeout( () => {
             this.copyOk = false;
           }, 1000);
-        }
+        },
       },
+
       computed: {
         qrcode() {
           const base = '//chart.apis.google.com/chart?cht=qr&chs=150x150&chld=L|1&chl=';
           return base + this.shortUrl;
-        }
+        },
+        // Ref: https://goo.gl/PzpIrt
+        isURL() {
+          const regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+          return regexp.test(this.inputUrl || '');
+        },
       }
     })
   </script>
