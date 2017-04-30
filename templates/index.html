@@ -6,9 +6,9 @@
   <link href="//mm.bst.126.net/favicon.ico" rel="shortcut icon">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.min.js"></script>
-  <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.6.0/dist/clipboard.min.js"></script>
   <link href="//fonts.googleapis.com/css?family=Baloo" rel="stylesheet">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
   <style>
     * {
       font-family: 'Baloo', "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -158,14 +158,14 @@
         <div class="input-box">
           <input v-model="inputUrl" placeholder="✒️Please input URL">
         </div>
-        <a v-if="!loading" class="btn" v-on:click="doShorten">🚀Shorten!</a>
-        <img v-if="loading" class="loading" src="//loading.io/assets/img/hourglass.svg">
+        <a v-show="!loading" class="btn" v-on:click="doShorten">🚀Shorten!</a>
+        <img v-show="loading" class="loading" src="//loading.io/assets/img/hourglass.svg">
       </div>
-      <div class="m-preview" v-if="shortUrl">
+      <div class="m-preview" v-show="shortUrl">
         <img :src="qrcode" width="150" height="150">
         <div class="url-box">
-          <a class="url" :href="shortUrl">{{ shortUrl }}</a>
-          <span class="copy" v-clipboard="shortUrl" @success="onCopySuccess">📋Copy<i v-if="copyOk">✔️</i></span>
+          <a class="url" :href="shortUrl">{{shortUrl}}</a>
+          <span class="copy" v-clipboard="shortUrl" @success="onCopySuccess">📋Copy<i v-show="copyOk">✔️</i></span>
         </div>
       </div>
     </div>
@@ -210,7 +210,7 @@
       }
     });
 
-    new Vue({
+    const app = new Vue({
       el: '#app',
       data: {
         loading: false,
