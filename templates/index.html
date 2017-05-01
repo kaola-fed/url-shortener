@@ -7,6 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <link href="//fonts.googleapis.com/css?family=Baloo|Material+Icons" rel="stylesheet">
+  <script>
+    if (navigator.appName === 'Microsoft Internet Explorer'
+      || !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/))) {
+      alert('IE is not supported!');
+    }
+  </script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
   <style>
@@ -191,11 +197,6 @@
   </div>
 
   <script>
-
-    if (navigator.appName === 'Microsoft Internet Explorer'
-      || !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/))) {
-      alert('IE is not supported!');
-    }
 
     // Ref: https://goo.gl/LfW5r2
     Vue.directive('clipboard', {
