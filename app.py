@@ -20,6 +20,11 @@ BASE_URL = 'https://163.lu/'
 def index():
     return render_template('index.html')
 
+@app.route('/ping')
+@cross_origin()
+def ping():
+    return 'pong'
+
 @app.route('/shorten', methods = ['POST'])
 @cross_origin()
 def shorten():
