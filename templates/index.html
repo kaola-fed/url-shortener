@@ -12,6 +12,9 @@
       || !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/))) {
       alert('IE is not supported!');
     }
+    if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+      alert('Safari is not supported!');
+    }
   </script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
@@ -137,7 +140,7 @@
     .m-preview img,
     .url-box {
       display: inline-block;
-      width: 150px;
+      min-width: 150px;
     }
 
     .url-box .url,
