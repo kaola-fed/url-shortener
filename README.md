@@ -1,5 +1,5 @@
 # url-shortener
-URL Shortener
+URL Shortener (with [Chrome Extension](https://github.com/kaola-fed/url-shortener-extension))
 
 ## How to run
 
