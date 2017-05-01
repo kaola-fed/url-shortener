@@ -3,9 +3,12 @@
 
 import sys, urllib, requests
 from flask import Flask, request, render_template
+from flask_cors import CORS, cross_origin
+
 app = Flask(__name__)
 app.jinja_env.variable_start_string = '{{ '
 app.jinja_env.variable_end_string = ' }}'
+CORS(app)
 
 if len(sys.argv) < 2:
     sys.exit()
@@ -18,6 +21,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/shorten', methods = ['POST'])
+@cross_origin()
 def shorten():
     url = request.form['url']
     url = urllib.unquote(url.encode('utf-8'))
