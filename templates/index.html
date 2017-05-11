@@ -37,6 +37,7 @@
       align-items: center;
       justify-content: center;
       background-color: #00BCD4;
+      animation: color-loop 18s infinite;
     }
 
     #app {
@@ -214,6 +215,24 @@
       top: 41px;
       transform: rotate(45deg);
       text-decoration: none;
+    }
+
+    @keyframes color-loop {
+      0% {
+        background-color: #2CAB5B;
+      }
+      25% {
+        background-color: #FABC03;
+      }
+      50% {
+        background-color: #ED4B40;
+      }
+      75% {
+        background-color: #4286F3;
+      }
+      100% {
+        background-color: #2CAB5B;
+      }
     }
   </style>
 </head>
