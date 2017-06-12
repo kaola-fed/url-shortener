@@ -307,8 +307,8 @@
         </div>
       </div>
       <div class="ribbon">
-        <a href="https://goo.gl/3Lt4yW" @click="visitExtension" target="_blank">Chrome Extension</a>
-        <div class="waves" v-show="!visited"></div>
+        <a href="https://goo.gl/3Lt4yW" target="_blank">Chrome Extension</a>
+        <div class="waves"></div>
       </div>
     </div>
   </div>
@@ -358,7 +358,6 @@
       data: {
         loading: false,
         copyOk: false,
-        visited: localStorage.getItem('visited') === 'true',
         inputUrl: '',
         shortUrl: '',
       },
@@ -391,10 +390,6 @@
           }, 1000);
         },
 
-        visitExtension() {
-          this.visited = true;
-          localStorage.setItem('visited', true);
-        }
       },
 
       computed: {
