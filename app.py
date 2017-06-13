@@ -36,7 +36,7 @@ def shorten():
     }
     res = requests.post('%sshorten/' % BASE_URL, params).json()
 
-    return BASE_URL + res['hash']
+    return BASE_URL + 'k/' + res['hash']
 
 
 if __name__ == '__main__':
